@@ -6,28 +6,27 @@ Image Classification with RNN (Recurrent Neural Network)
 '''
 import os
 os.environ["KERAS_BACKEND"] = "tensorflow"
-
 import keras
 import numpy as np
-import matplotlib.pyplot as plt
 
 # load the dataset
 (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
 
 # compute the number of labels
 num_labels = len(np.unique(y_train))
-image_size = x_train.shape[1]
-print(image_size)
+image_height = image_width = x_train.shape[1]
+timesteps = image_height
+feature = image_width
 
 # convert to one-hot vector, we will use CategoricalCrossentropy loss function.
 y_train = keras.utils.to_categorical(y_train)
 y_test = keras.utils.to_categorical(y_test)
 
 # resize and normalize
-x_train = np.reshape(x_train,[-1, image_size, image_size])
+x_train = np.reshape(x_train,[-1, timesteps, feature])
 x_train = x_train.astype('float32') / 255.0
-x_test = np.reshape(x_test,[-1, image_size, image_size])
-x_test = x_test.astype('float32') / 255.
+x_test = np.reshape(x_test,[-1, timesteps, feature])
+x_test = x_test.astype('float32') / 255.0
 
 # hyperparameter
 batch_size = 128
@@ -37,11 +36,12 @@ learning_rate=1e-3
 
 # sequential model
 model = keras.Sequential([
-    keras.Input(shape=(image_size, image_size)),
+    keras.Input(shape=(timesteps, feature)),
     # Fully-connected RNN where the output is to be fed back as the new input.
     # output shape is (batch_size, units)
     keras.layers.SimpleRNN(units=256, dropout=drop_rate),
-    keras.layers.Dense(num_labels, activation='softmax')
+    # We specify activation=None so as to return logits
+    keras.layers.Dense(num_labels, activation=None)
 ])
 
 model.summary()
@@ -49,7 +49,7 @@ model.summary()
 # compile the model
 model.compile(
     optimizer=keras.optimizers.Adam(learning_rate=learning_rate),
-    loss=keras.losses.CategoricalCrossentropy(),
+    loss=keras.losses.CategoricalCrossentropy(from_logits=True),
     metrics=[
         keras.metrics.CategoricalAccuracy()
     ],

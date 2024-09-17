@@ -6,28 +6,25 @@ Image Classification with CNN (Convolutional Neural Network)
 '''
 import os
 os.environ["KERAS_BACKEND"] = "tensorflow"
-
 import keras
 import numpy as np
-import matplotlib.pyplot as plt
 
 # load the dataset
 (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
 
 # compute the number of labels
 num_labels = len(np.unique(y_train))
-image_size = x_train.shape[1]
-print(image_size)
+image_height = image_width = x_train.shape[1]
 
 # convert to one-hot vector, we will use CategoricalCrossentropy loss function.
 y_train = keras.utils.to_categorical(y_train)
 y_test = keras.utils.to_categorical(y_test)
 
 # resize and normalize
-x_train = np.reshape(x_train,[-1, image_size, image_size, 1])
+x_train = np.reshape(x_train,[-1, image_height, image_width, 1])
 x_train = x_train.astype('float32') / 255.0
-x_test = np.reshape(x_test,[-1, image_size, image_size, 1])
-x_test = x_test.astype('float32') / 255.
+x_test = np.reshape(x_test,[-1, image_height, image_width, 1])
+x_test = x_test.astype('float32') / 255.0
 
 # hyperparameter
 batch_size = 128
@@ -37,7 +34,7 @@ learning_rate=1e-3
 
 # sequential model
 model = keras.Sequential([
-    keras.Input(shape=(image_size, image_size, 1)),
+    keras.Input(shape=(image_height, image_width, 1)),
     keras.layers.Conv2D(16, 3, padding='same', activation='relu'),
     keras.layers.MaxPooling2D(pool_size=(2, 2)),
     keras.layers.Conv2D(32, 3, padding='same', activation='relu'),

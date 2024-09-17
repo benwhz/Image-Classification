@@ -6,29 +6,25 @@ Image Classification with MLP (Multilayer Perceptron)
 '''
 import os
 os.environ["KERAS_BACKEND"] = "tensorflow"
-
 import keras
 import numpy as np
-import matplotlib.pyplot as plt
 
 # load the dataset
 (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
 
 # compute the number of labels
 num_labels = len(np.unique(y_train))
-image_size = x_train.shape[1]
-input_size = image_size * image_size
+image_height = image_width = x_train.shape[1]
+input_size = image_height * image_width
 
 # we need not convert label to one-hot vector, 
-# because we will use the SparseCategoricalCrossentropy, 
-# not the CategoricalCrossentropy
+# because we will use SparseCategoricalCrossentropy loss.
 
 # resize and normalize
 x_train = np.reshape(x_train, [-1, input_size])
 x_train = x_train.astype('float32') / 255.0
 x_test = np.reshape(x_test, [-1, input_size])
-x_test = x_test.astype('float32') / 255.
-#print(x_train[0].shape)
+x_test = x_test.astype('float32') / 255.0
 
 # hyperparameter
 batch_size = 128
