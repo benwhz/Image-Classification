@@ -20,7 +20,7 @@ input_size = image_height * image_width
 # we need not convert label to one-hot vector, 
 # because we will use SparseCategoricalCrossentropy loss.
 
-# resize and normalize
+# reshape and normalize
 x_train = np.reshape(x_train, [-1, input_size])
 x_train = x_train.astype('float32') / 255.0
 x_test = np.reshape(x_test, [-1, input_size])
@@ -29,7 +29,7 @@ x_test = x_test.astype('float32') / 255.0
 # hyperparameter
 batch_size = 128
 drop_rate = 0.40
-train_epochs = 20
+train_epochs = 5
 learning_rate=1e-3
 
 # sequential model

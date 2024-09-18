@@ -14,13 +14,14 @@ import numpy as np
 
 # compute the number of labels
 num_labels = len(np.unique(y_train))
-image_height = image_width = x_train.shape[1]
+image_height =  x_train.shape[1]
+image_width = x_train.shape[2]
 
 # convert to one-hot vector, we will use CategoricalCrossentropy loss function.
 y_train = keras.utils.to_categorical(y_train)
 y_test = keras.utils.to_categorical(y_test)
 
-# resize and normalize
+# reshape and normalize
 x_train = np.reshape(x_train,[-1, image_height, image_width, 1])
 x_train = x_train.astype('float32') / 255.0
 x_test = np.reshape(x_test,[-1, image_height, image_width, 1])
